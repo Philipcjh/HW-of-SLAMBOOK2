@@ -159,22 +159,22 @@ int main(int argc, char **argv) {
   bundleAdjustment(pts1, pts2, R, t);
 
   // verify p1 = R * p2 + t
-  for (int i = 0; i < 5; i++) {
-    cout << "p1 = " << pts1[i] << endl;
-    cout << "p2 = " << pts2[i] << endl;
-    cout << "(R*p2+t) = " <<
-         R * (Mat_<double>(3, 1) << pts2[i].x, pts2[i].y, pts2[i].z) + t
-         << endl;
-    cout << endl;
-  }
+//   for (int i = 0; i < 5; i++) {
+//     cout << "p1 = " << pts1[i] << endl;
+//     cout << "p2 = " << pts2[i] << endl;
+//     cout << "(R*p2+t) = " <<
+//          R * (Mat_<double>(3, 1) << pts2[i].x, pts2[i].y, pts2[i].z) + t
+//          << endl;
+//     cout << endl;
+//   }
   
-  double error = 0;
+  double error_total = 0;
   for(size_t i = 0; i < pts1.size(); i++)
   {
-      cv::Mat e = (Mat_<double>(3, 1) << pts1[i].x, pts1[i].y, pts1[i].z) - (R * (Mat_<double>(3, 1) << pts2[i].x, pts2[i].y, pts2[i].z) + t);
-      error += norm(e, NORM_L1);  
+      cv::Mat error = (Mat_<double>(3, 1) << pts1[i].x, pts1[i].y, pts1[i].z) - (R * (Mat_<double>(3, 1) << pts2[i].x, pts2[i].y, pts2[i].z) + t);
+      error_total += norm(error);  
   }
-  cout << "total error is " << error << endl;
+  cout << "total error is " << error_total << endl;
   
 }
 
@@ -293,7 +293,7 @@ void bundleAdjustment(
   optimizer.setAlgorithm(solver);   // 设置求解器
   optimizer.setVerbose(true);       // 打开调试输出
 
-  // vertex相机位姿
+  // vertex李代数位姿
   VertexPose *pose = new VertexPose(); // camera pose
   pose->setId(0);
   pose->setEstimate(Sophus::SE3d());
@@ -339,7 +339,7 @@ void bundleAdjustment(
   
   for(size_t i = 0; i < pts2.size(); i++)
     {
-        Eigen::Vector3d tmp = dynamic_cast<VertexPoint *> ( optimizer.vertex ( i+1 ) )->estimate();
-        pts2[i] = Point3_<float>(tmp(0),tmp(1),tmp(2));
+        Eigen::Vector3d vertex_point = dynamic_cast<VertexPoint *> ( optimizer.vertex ( i+1 ) )->estimate();
+        pts2[i] = Point3f(vertex_point(0),vertex_point(1),vertex_point(2));
     }
 }
