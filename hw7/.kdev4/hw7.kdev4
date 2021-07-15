@@ -1,0 +1,80 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\x06\x00h\x00w\x007)
+
+[CMake]
+Build Directory Count=1
+Current Build Directory Index=0
+ProjectRootRelative=./
+
+[CMake][CMake Build Directory 0]
+Build Directory Path=file:///home/philip/hw/hw7/build
+Build Type=Debug
+CMake Binary=file:///usr/bin/cmake
+Environment Profile=
+Extra Arguments=
+Install Directory=file:///usr/local
+
+[Defines And Includes][Compiler]
+Name=GCC
+Path=gcc
+Type=GCC
+
+[Launch]
+Launch Configurations=Launch Configuration 0,Launch Configuration 1,Launch Configuration 2
+
+[Launch][Launch Configuration 0]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=features
+Type=Native Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments=1.png
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x02\x00\x00\x00\x06\x00h\x00w\x007\x00\x00\x00\x10\x00f\x00e\x00a\x00t\x00u\x00r\x00e\x00s)
+Dependency Action=Nothing
+EnvironmentGroup=default
+Executable=file:///home/philip/hw/hw7/
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=hw7,features
+Use External Terminal=false
+Working Directory=
+isExecutable=false
+
+[Launch][Launch Configuration 1]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=pose_estimation_3d2d
+Type=Native Application
+
+[Launch][Launch Configuration 1][Data]
+Arguments=1.png 2.png 1_depth.png 2_depth.png
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x02\x00\x00\x00\x06\x00h\x00w\x007\x00\x00\x00(\x00p\x00o\x00s\x00e\x00_\x00e\x00s\x00t\x00i\x00m\x00a\x00t\x00i\x00o\x00n\x00_\x003\x00d\x002\x00d)
+Dependency Action=Nothing
+EnvironmentGroup=default
+Executable=file:///home/philip/hw/hw7/
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=hw7,pose_estimation_3d2d
+Use External Terminal=false
+Working Directory=
+isExecutable=false
+
+[Launch][Launch Configuration 2]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=pose_estimation_3d3d
+Type=Native Application
+
+[Launch][Launch Configuration 2][Data]
+Arguments=1.png 2.png 1_depth.png 2_depth.png
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x02\x00\x00\x00\x06\x00h\x00w\x007\x00\x00\x00(\x00p\x00o\x00s\x00e\x00_\x00e\x00s\x00t\x00i\x00m\x00a\x00t\x00i\x00o\x00n\x00_\x003\x00d\x003\x00d)
+Dependency Action=Nothing
+EnvironmentGroup=default
+Executable=file:///home/philip/hw/hw7/
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=hw7,pose_estimation_3d3d
+Use External Terminal=false
+Working Directory=
+isExecutable=false
+
+[MakeBuilder]
+Number Of Jobs=4
