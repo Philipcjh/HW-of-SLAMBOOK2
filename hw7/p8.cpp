@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
   cv::Rodrigues(r, R); // r为旋转向量形式，用Rodrigues公式转换为矩阵
   t2 = chrono::steady_clock::now();
   time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-  cout << "solve p`np in opencv cost time: " << time_used.count() << " seconds." << endl;
+  cout << "solve pnp in opencv cost time: " << time_used.count() << " seconds." << endl;
 
   cout << "R=" << endl << R << endl;
   cout << "t=" << endl << t << endl;
