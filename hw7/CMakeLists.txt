@@ -32,6 +32,11 @@ target_link_libraries(pose_estimation_3d3d
         g2o_core g2o_stuff
         ${OpenCV_LIBS})
 
+add_executable(wrong_matches p8.cpp)
+target_link_libraries(wrong_matches
+        g2o_core g2o_stuff
+        ${OpenCV_LIBS})
+
 add_executable(ceresPnP p10PnP.cpp)
 target_link_libraries(ceresPnP ${OpenCV_LIBS} ${CERES_LIBRARIES} Sophus::Sophus)
 
