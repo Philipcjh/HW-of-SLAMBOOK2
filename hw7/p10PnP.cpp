@@ -60,8 +60,8 @@ struct PnPReprojectionError {
     return true;
   }
 
-   // Factory to hide the construction of the CostFunction object from
-   // the client code.
+   // 2，3，3指输出维度（residuals）为3
+   //待优化变量（rotation_vector，translation_vector）维度分别为3
    static ceres::CostFunction* Create(const Point2f _pts_2d,
                                       const Point3f _pts_3d) {
      return (new ceres::AutoDiffCostFunction<PnPReprojectionError, 2, 3, 3>(

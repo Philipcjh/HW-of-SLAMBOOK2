@@ -57,8 +57,8 @@ struct ICPReprojectionError {
     return true;
   }
 
-   // Factory to hide the construction of the CostFunction object from
-   // the client code.
+   // 3，3，3指输出维度（residuals）为3
+   //待优化变量（rotation_vector，translation_vector）维度分别为3
    static ceres::CostFunction* Create(const Point3f _pts1_3d,
                                       const Point3f _pts2_3d) {
      return (new ceres::AutoDiffCostFunction<ICPReprojectionError, 3, 3, 3>(
