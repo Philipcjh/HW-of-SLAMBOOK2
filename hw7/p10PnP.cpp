@@ -60,7 +60,7 @@ struct PnPReprojectionError {
     return true;
   }
 
-   // 2，3，3指输出维度（residuals）为3
+   // 2，3，3指输出维度（residuals）为2
    //待优化变量（rotation_vector，translation_vector）维度分别为3
    static ceres::CostFunction* Create(const Point2f _pts_2d,
                                       const Point3f _pts_3d) {
