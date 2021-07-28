@@ -20,3 +20,11 @@ include_directories(
 
 add_executable(direct_method p3.cpp)
 target_link_libraries(direct_method ${OpenCV_LIBS} ${Pangolin_LIBRARIES})
+
+add_executable(ceres_direct_method p4_Ceres_direct_method.cpp)
+target_link_libraries(ceres_direct_method ${OpenCV_LIBS} ${CERES_LIBRARIES} Sophus::Sophus)
+
+add_executable(g2o_direct_method p4_g2o_direct_method.cpp)
+target_link_libraries(g2o_direct_method
+        g2o_core g2o_stuff
+        ${OpenCV_LIBS})
