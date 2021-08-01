@@ -17,7 +17,7 @@ SET(G2O_LIBS g2o_csparse_extension g2o_stuff g2o_core cxsparse)
 include_directories(${PROJECT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} ${CSPARSE_INCLUDE_DIR})
 
 add_library(bal_common common.cpp)
-add_executable(bundle_adjustment_ceres bundle_adjustment_ceres.cpp)
+add_executable(bundle_adjustment_ceres p3.cpp)
 
 target_link_libraries(bundle_adjustment_ceres ${CERES_LIBRARIES} bal_common)
 
