@@ -39,7 +39,7 @@ for i = 1 : length(Score)
             FP = FP + 1;
         end
     % 小于阈值时，我们认为该回环为N
-    elseif Score(i) < threshold && Fact(i) == 0
+    elseif Score(i) < threshold && Fact(i) == 1
             FN = FN + 1;
     end
 end        
