@@ -70,55 +70,6 @@ struct ICPReprojectionError {
 };
 
 
-// 通过引入Sophus库简化计算，并使用雅克比矩阵的解析解代替自动求导
-class ICPSE3ReprojectionError : public ceres::SizedCostFunction<3, 6> {
-public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    ICPSE3ReprojectionError(Eigen::Vector3d pts1_3d, Eigen::Vector3d pts2_3d) :
-            _pts1_3d(pts1_3d), _pts2_3d(pts2_3d) {}
-
-    virtual ~ICPSE3ReprojectionError() {}
-
-    virtual bool Evaluate(
-      double const* const* parameters, double *residuals, double **jacobians) const {
-
-        Eigen::Map<const Eigen::Matrix<double,6,1>> se3(*parameters);	
-
-        Sophus::SE3d T = Sophus::SE3d::exp(se3);
-
-        Eigen::Vector3d Pc = T * _pts2_3d;
-
-        Eigen::Vector3d error =  _pts1_3d - Pc;
-
-        residuals[0] = error[0];
-        residuals[1] = error[1];
-	residuals[2] = error[2];
-
-        if(jacobians != NULL) {
-            if(jacobians[0] != NULL) {
-                Eigen::Map<Eigen::Matrix<double, 3, 6, Eigen::RowMajor>> J(jacobians[0]);
-	      
-                double x = Pc[0];
-                double y = Pc[1];
-                double z = Pc[2];
-		
-		//雅克比矩阵推导看书187页公式(7.45),因为这里变换后的P'在计算error时是被减的，所以应该是(7.45)取负
-                J(0,0) = -1; J(0,1) = 0; J(0,2) = 0; J(0,3) = 0; J(0,4) = -z; J(0,5) = y; 
-		J(1,0) = 0; J(1,1) = -1; J(1,2) = 0; J(1,3) = z; J(1,4) = 0; J(1,5) = -x;
-		J(2,0) = 0; J(2,1) = 0; J(2,2) = -1; J(2,3) = -y; J(2,4) = x; J(2,5) = 0;
-            }
-        }
-
-        return true;
-    }
-
-private:
-    const Eigen::Vector3d _pts1_3d;
-    const Eigen::Vector3d _pts2_3d;
-};
-
-
 int main(int argc, char **argv){
   if (argc != 5) {
     cout << "usage: pose_estimation_3d3d img1 img2 depth1 depth2" << endl;
@@ -161,12 +112,8 @@ int main(int argc, char **argv){
   cout << "ICP via SVD results: " << endl;
   cout << "R = " << R << endl;
   cout << "t = " << t << endl;
-  cout << "R_inv = " << R.t() << endl;
-  cout << "t_inv = " << -R.t() * t << endl;
   cout << endl;
   
-  //ceres求解PnP, 使用自动求导
-  cout << "以下是ceres求解（自动求导）" << endl;
   double r_ceres[3]={0,0,0};
   double t_ceres[3]={0,0,0};
   
@@ -196,40 +143,6 @@ int main(int argc, char **argv){
   
   chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
   chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-  cout << "solve pnp in ceres cost time: " << time_used.count() << " seconds." << endl;
-  
-  //ceres求解PnP, 使用雅克比矩阵的解析解
-  cout << "以下是ceres求解（雅克比矩阵给出解析解）" << endl;
-  
-  Sophus::Vector6d se3;
-  se3<<0,0,0,0,0,0;// 初始化非常重要
-  
-  ceres::Problem problem_;
-  for(int i=0; i<pts1_eigen.size(); ++i) {
-      ceres::CostFunction *cost_function;
-      cost_function = new ICPSE3ReprojectionError(pts1_eigen[i], pts2_eigen[i]);
-      problem_.AddResidualBlock(cost_function, NULL, se3.data());
-      
-  }
-  
-  t1 = chrono::steady_clock::now();
-  ceres::Solver::Options options_;
-  options_.dynamic_sparsity = true;
-  options_.max_num_iterations = 100;
-  options_.sparse_linear_algebra_library_type = ceres::SUITE_SPARSE;
-  options_.minimizer_type = ceres::TRUST_REGION;
-  options_.linear_solver_type = ceres::SPARSE_NORMAL_CHOLESKY;
-  options_.trust_region_strategy_type = ceres::DOGLEG;
-  options_.minimizer_progress_to_stdout = true;
-  options_.dogleg_type = ceres::SUBSPACE_DOGLEG;
-
-  ceres::Solver::Summary summary_;
-  ceres::Solve(options_, &problem_, &summary_);
-  std::cout << summary_.BriefReport() << "\n";
-  
-  std::cout << "estimated pose: \n" << Sophus::SE3d::exp(se3).matrix() << std::endl;
-  t2 = chrono::steady_clock::now();
-  time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
   cout << "solve pnp in ceres cost time: " << time_used.count() << " seconds." << endl;
   
   return 0;
